@@ -1,5 +1,8 @@
 package com.kenzie.app;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,13 +11,17 @@ import java.util.Scanner;
 
 // create custom exceptions InvalidWeekException and InvalidDayOfWeekException first
 
+
+
+
+
 public class Application {
     static final String INPUT_FILENAME = "austin_weather.csv";
      // removes the CSV header from the array of lines
     // DO NOT MODIFY THIS METHOD
     public static String[] removeCSVHeader(String[] originalArray){
         String[] newArray = new String[originalArray.length - 1];
-    
+
         for (int i = 0, j = 0; i < originalArray.length; i++) {
             if (i != 0) {
                 newArray[j++] = originalArray[i];
@@ -25,21 +32,55 @@ public class Application {
 
     public static String readCSVLines(String filename) throws IOException{
         // read in the file and return its contents
-        return "";
+        String DataFile = "";
+        String data;
+        try
+        {
+
+            File file = new File(filename);
+            FileReader FileR = new FileReader(file);
+            BufferedReader buff = new BufferedReader(FileR);
+            try
+            {
+                while((data= buff.readLine())!=null)
+                {
+                    DataFile+=data+"\n";
+                }
+                buff.close();
+            }
+            catch(Exception e)
+            {
+
+            }
+        }
+        catch(Exception e)
+        {
+
+        }
+        return DataFile;
     }
 
     public static String[][] saveToMultidimensionalArray(String csvContent, int numRows, int numColumns){
         String[] csvLines = csvContent.split("\n");
         String[] csvDataWithoutHeaders = removeCSVHeader(csvLines);
-
+        String[][] arr2D = new String[numRows][numColumns];
+        int idx = 0;
+        for(int i = 0; i < arr2D.length; i++)
+        {
+            for(int j = 0; j < arr2D[0].length; j++)
+            {
+                arr2D[i][j] = csvLines[idx];
+                idx++;
+            }
+        }
         // create a multidimensional array with numRows rows and numColumns columns
 
         // use a nested loop to loop through each line of the CSV to put in the multidimensional array
 
         // return the multidimensional array
-        return new String[][]{};
+        return arr2D;
     }
-    
+
     public static String getWeekToSelectFromData(Scanner scanner){
         System.out.print("Enter a week number between 1 and 10 with information you want: ");
         String weekToSelect = scanner.nextLine();
@@ -74,10 +115,23 @@ public class Application {
 
         do {
             // TODO: wrap the code inside the do-part of the do-while loop with a try/catch block
-            // when the exception is caught, print the message from variable integerExceptionWeekMessage above
-            weekToSelect = getWeekToSelectFromData(scanner);
-            weekNumberToSelect = Integer.parseInt(weekToSelect);
-        } while(weekNumberToSelect == 0);
+
+            try{
+                // when the exception is caught, print the message from variable integerExceptionWeekMessage above
+                weekToSelect = getWeekToSelectFromData(scanner);
+                weekNumberToSelect = Integer.parseInt(weekToSelect);
+            }
+            catch (Exception e ) {
+                System.out.println(integerExceptionWeekMessage);
+            }
+
+        }
+        while(weekNumberToSelect == 0);
+
+        if (weekNumberToSelect < 1  || weekNumberToSelect > 10) {
+            throw new InvalidWeekException(invalidNumberExceptionWeekMessage);
+        }
+
 
         // TODO: Throw an InvalidWeekException if the week entered is greater than 10 or less than 1.
         // Use a try/catch block here to catch the exception and print the message before adding an empty return statement.
@@ -86,14 +140,22 @@ public class Application {
         do {
             // TODO: wrap the code inside the do-part of the do-while loop with a try/catch block
             // when the exception is caught, print the message from variable integerExceptionDayOfWeekMessage above
-            dayToSelect = getDayToSelectFromData(scanner);
-            dayNumberToSelect = Integer.parseInt(dayToSelect);
+            try {
+                dayToSelect = getDayToSelectFromData(scanner);
+                dayNumberToSelect = Integer.parseInt(dayToSelect);
+            }
+            catch (Exception e ) {
+                System.out.println(integerExceptionDayOfWeekMessage);
+            }
+
         } while(dayNumberToSelect == 0);
 
         // TODO: Throw an InvalidDayOfWeekException if the day of week entered is greater than 7 or less than 1.
         // Use a try/catch block here to catch the exception and print the message before adding an empty return statement.
         // When throwing the exception, pass in the message from variable invalidNumberExceptionDayOfWeekMessage.
-
+            if (weekNumberToSelect > 7 || weekNumberToSelect < 1) {
+                throw new InvalidWeekException(invalidNumberExceptionDayOfWeekMessage);
+            }
 
         // do not change code in main() below this line
         
