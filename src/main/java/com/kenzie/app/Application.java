@@ -32,33 +32,9 @@ public class Application {
     }
 
     public static String readCSVLines(String filename) throws IOException{
-        // read in the file and return its contents
-        String DataFile = "";
-        String data;
-        try
-        {
+        Path filePath = Path.of(filename);
+       return Files.readString(filePath);
 
-            File file = new File(filename);
-            FileReader FileR = new FileReader(file);
-            BufferedReader buff = new BufferedReader(FileR);
-            try
-            {
-                while((data= buff.readLine())!=null)
-                {
-                    DataFile+=data+"\n";
-                }
-                buff.close();
-            }
-            catch(Exception e)
-            {
-                System.out.println(e.getMessage());
-            }
-        }
-        catch(Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
-        return DataFile;
     }
 
     public static String[][] saveToMultidimensionalArray(String csvData, int numRows, int numColumns){
@@ -70,7 +46,7 @@ public class Application {
         {
             for(int j = 0; j < arr2D[0].length; j++)
             {
-                arr2D[i][j] = csvLines[idx];
+                arr2D[i][j] = csvDataWithoutHeaders[idx];
                 idx++;
             }
         }
@@ -128,7 +104,8 @@ public class Application {
 
             }
             catch (InvalidWeekException e ) {
-                System.out.println(invalidNumberExceptionWeekMessage);
+                System.out.println(e.getMessage());
+                return;
 
             }
             catch (NumberFormatException e)
@@ -159,7 +136,8 @@ public class Application {
 
             }
             catch (InvalidDayOfWeekException e ) {
-                System.out.println(invalidNumberExceptionDayOfWeekMessage);
+                System.out.println(e.getMessage());
+                return;
 
             }
             catch (NumberFormatException e) {
