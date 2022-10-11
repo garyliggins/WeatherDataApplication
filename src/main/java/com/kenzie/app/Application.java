@@ -1,3 +1,4 @@
+
 package com.kenzie.app;
 
 import java.io.BufferedReader;
@@ -17,7 +18,7 @@ import java.util.Scanner;
 
 public class Application {
     static final String INPUT_FILENAME = "austin_weather.csv";
-     // removes the CSV header from the array of lines
+    // removes the CSV header from the array of lines
     // DO NOT MODIFY THIS METHOD
     public static String[] removeCSVHeader(String[] originalArray){
         String[] newArray = new String[originalArray.length - 1];
@@ -50,18 +51,18 @@ public class Application {
             }
             catch(Exception e)
             {
-
+                System.out.println(e.getMessage());
             }
         }
         catch(Exception e)
         {
-
+            System.out.println(e.getMessage());
         }
         return DataFile;
     }
 
-    public static String[][] saveToMultidimensionalArray(String csvContent, int numRows, int numColumns){
-        String[] csvLines = csvContent.split("\n");
+    public static String[][] saveToMultidimensionalArray(String csvData, int numRows, int numColumns){
+        String[] csvLines = csvData.split("\n");
         String[] csvDataWithoutHeaders = removeCSVHeader(csvLines);
         String[][] arr2D = new String[numRows][numColumns];
         int idx = 0;
@@ -117,20 +118,28 @@ public class Application {
             // TODO: wrap the code inside the do-part of the do-while loop with a try/catch block
 
             try{
-                // when the exception is caught, print the message from variable integerExceptionWeekMessage above
                 weekToSelect = getWeekToSelectFromData(scanner);
                 weekNumberToSelect = Integer.parseInt(weekToSelect);
-            }
-            catch (Exception e ) {
-                System.out.println(integerExceptionWeekMessage);
-            }
 
+                if (weekNumberToSelect < 1  || weekNumberToSelect > 10) {
+                    throw new InvalidWeekException(invalidNumberExceptionWeekMessage);
+                }
+                // when the exception is caught, print the message from variable integerExceptionWeekMessage above
+
+            }
+            catch (InvalidWeekException e ) {
+                System.out.println(invalidNumberExceptionWeekMessage);
+
+            }
+            catch (NumberFormatException e)
+            {
+                System.out.println(integerExceptionWeekMessage);
+
+            }
         }
         while(weekNumberToSelect == 0);
 
-        if (weekNumberToSelect < 1  || weekNumberToSelect > 10) {
-            throw new InvalidWeekException(invalidNumberExceptionWeekMessage);
-        }
+
 
 
         // TODO: Throw an InvalidWeekException if the week entered is greater than 10 or less than 1.
@@ -143,22 +152,33 @@ public class Application {
             try {
                 dayToSelect = getDayToSelectFromData(scanner);
                 dayNumberToSelect = Integer.parseInt(dayToSelect);
+
+                if (dayNumberToSelect > 7 || dayNumberToSelect < 1) {
+                    throw new InvalidDayOfWeekException(invalidNumberExceptionDayOfWeekMessage);
+                }
+
             }
-            catch (Exception e ) {
+            catch (InvalidDayOfWeekException e ) {
+                System.out.println(invalidNumberExceptionDayOfWeekMessage);
+
+            }
+            catch (NumberFormatException e) {
                 System.out.println(integerExceptionDayOfWeekMessage);
             }
 
-        } while(dayNumberToSelect == 0);
+        }
 
+        while(dayNumberToSelect == 0);
         // TODO: Throw an InvalidDayOfWeekException if the day of week entered is greater than 7 or less than 1.
         // Use a try/catch block here to catch the exception and print the message before adding an empty return statement.
         // When throwing the exception, pass in the message from variable invalidNumberExceptionDayOfWeekMessage.
-            if (weekNumberToSelect > 7 || weekNumberToSelect < 1) {
-                throw new InvalidWeekException(invalidNumberExceptionDayOfWeekMessage);
-            }
+
+
+
+
 
         // do not change code in main() below this line
-        
+
         String specificDayInfo = csvData[weekNumberToSelect - 1][dayNumberToSelect - 1];
 
         String[] dayInfoArray = specificDayInfo.split(",");
@@ -169,3 +189,4 @@ public class Application {
         System.out.println("Average temperature (degrees F): " + dayInfoArray[3].strip());
     }
 }
+

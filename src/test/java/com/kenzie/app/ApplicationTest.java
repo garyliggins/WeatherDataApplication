@@ -42,7 +42,7 @@ public class ApplicationTest {
         System.setOut(new PrintStream(outContent));
     }
 
-    @Test
+    @Test //fails
     public void testReadCSVFromFile() throws IOException {
         String filename = "austin_weather_test.csv";
         String fileContents = Application.readCSVLines(filename);
@@ -69,7 +69,7 @@ public class ApplicationTest {
         assertEquals(expectedFileContents, fileContents);
     }
 
-    @Test
+    @Test //this one fails
     public void testCreateMultidimensionalArray() {
         int numRows = 1;
         int numColumns = 6;
@@ -99,14 +99,14 @@ public class ApplicationTest {
         }
     }
 
-    @Test
+    @Test //this test gets ignored
     public void testRunMainBadWeekInput_Word(){
         runMainWithInput("Oranges\n14\n");
         assertThat(outContent.toString(), containsString("You have to enter an integer for the week!"));
         assertThat(outContent.toString(), containsString("You need to enter a number between 1 and 10 for the week!"));
     }
 
-    @Test
+    @Test  //this test gets ignored
     public void testRunMainBadWeekInput_Number(){
         runMainWithInput("14\n");
         assertThat(outContent.toString(), containsString("You need to enter a number between 1 and 10 for the week!"));
